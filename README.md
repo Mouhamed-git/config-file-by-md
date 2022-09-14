@@ -13,7 +13,7 @@ I decided to share all configuration files that will allow the validate a projec
 >    build:
 >      context: ./directory-reverse-proxy/ # ./udagram-reverseproxy/ for exemple
 >      dockerfile: DockerFile
->    image: your-reverseproxy-image-name
+>    image: your-reverseproxy-image-name #reverseproxy for exemple
 >  backend_user:
 >    build:
 >      context: ./directory-udagram-api-user/
