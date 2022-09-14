@@ -1,0 +1,22 @@
+version: "3"
+services:
+  reverseproxy:
+    build:
+      context: ./directory-reverse-proxy/ # ./udagram-reverseproxy/ for exemple
+      dockerfile: DockerFile
+    image: your-reverseproxy-image-name
+  backend_user:
+    build:
+      context: ./directory-udagram-api-user/
+      dockerfile: DockerFile
+    image: your-udagram-api-user-image-name
+  backend_feed:
+    build:
+      context: ./directory-udagram-api-feed/
+      dockerfile: DockerFile
+    image: your-udagram-api-feed-image-name
+  frontend:
+    build:
+      context: ./udagram-frontend/
+      dockerfile: DockerFile
+    image: your-frontend-image-name
