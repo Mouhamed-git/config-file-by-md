@@ -13,29 +13,29 @@ I decided to share all configuration files that will allow the validate a projec
 >    build:
 >      context: ./directory-reverse-proxy/ # ./udagram-reverseproxy/ for exemple
 >      dockerfile: DockerFile
->    image: your-reverseproxy-image-name #reverseproxy for exemple
+>    image: your-docker-image-reverseproxy #reverseproxy for exemple
 >  backend_user:
 >    build:
 >      context: ./directory-udagram-api-user/
 >      dockerfile: DockerFile
->    image: your-udagram-api-user-image-name
+>    image: your-docker-image-udagram-api-user
 >  backend_feed:
 >    build:
 >      context: ./directory-udagram-api-feed/
 >      dockerfile: DockerFile
->    image: your-udagram-api-feed-image-name
+>    image: your-docker-image-udagram-api-feed
 >  frontend:
 >    build:
 >      context: ./udagram-frontend/
 >      dockerfile: DockerFile
->    image: your-frontend-image-name
+>    image: your-docker-image-udagram-frontend
  
 > ### ** 🔵 [!FILE2] # **DOCKER-COMPOSE** 
 > ```yaml
 >  version: "3"
 >  services:
 >    reverseproxy:
->      image: your-reverse-proxy-image-name #reverseproxy for exemple
+>      image: your-docker-image-reverse #reverseproxy for exemple
 >      ports:
 >        - 8080:8080
 >      restart: always
@@ -43,7 +43,7 @@ I decided to share all configuration files that will allow the validate a projec
 >        - backend-user
 >        - backend-feed
 >    backend-user:
->      image: your-udagram-api-user-name
+>      image: your-docker-image-udagram-api-user
 >      environment:
 >        POSTGRES_USERNAME: $POSTGRES_USERNAME
 >        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
@@ -55,7 +55,7 @@ I decided to share all configuration files that will allow the validate a projec
 >        JWT_SECRET: $JWT_SECRET
 >        URL: $URL
 >    backend-feed:
->      image: your-udagram-api-feed-name
+>      image: your-docker-image-udagram-api-feed
 >      volumes:
 >        - $HOME/.aws:/root/.aws
 >      environment:
@@ -69,19 +69,19 @@ I decided to share all configuration files that will allow the validate a projec
 >        JWT_SECRET: $JWT_SECRET
 >        URL: $URL
 >    frontend:
->      image: your-udagram-frontend-name:local
+>      image: your-docker-image-udagram-frontend:local
 >      ports:
 >        - "8100:80"
 
 > ### ** 🔵 [!FILE3] # **DOCKERFILE-BACKEND (USERS - FEED)** 
 > ```bash
->    ## Construire
+>    ## Build
 >    FROM node:13
 >
 >    # Create workdir app
 >    WORKDIR /usr/src/app
 >
->    # Copy package.json package-lock.json on current container directory
+>    # Copy package.json and package-lock.json on current container directory
 >    COPY package*.json ./
 >
 >    # Install dependencies
