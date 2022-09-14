@@ -1,13 +1,11 @@
-# SmartAPI Under 15 Minutes
-
 ## INTRODUCTION 
 
-As I certainly did, you must have encountered problems with some configuration files in project 3 😂 .
+As I certainly did, you must have encountered problems with some configuration files in project 3 (Refactor Monolith to Microservices and Deploy)😂 .
 
-I decided to share all the configuration files that will allow the validate a project.🤔
+I decided to share all configuration files that will allow the validate a project.🤔
 
 ## LET'S GO 🚀
-> # ** 🔵 [!FILE1]DOCKER-COMPOSE-BUILD** 
+> ### ** 🔵 [!FILE1]DOCKER-COMPOSE-BUILD** 
 > ```yaml
 >  version: "3"
 >  services:
@@ -32,7 +30,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >      dockerfile: DockerFile
 >    image: your-frontend-image-name
  
-> # ** 🔵 [!FILE2] # **DOCKER-COMPOSE** 
+> ### ** 🔵 [!FILE2] # **DOCKER-COMPOSE** 
 > ```yaml
 >  version: "3"
 >  services:
@@ -75,7 +73,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >      ports:
 >        - "8100:80"
 
-> # ** 🔵 [!FILE3] # **DOCKERFILE-BACKEND (USERS - FEED)** 
+> ### ** 🔵 [!FILE3] # **DOCKERFILE-BACKEND (USERS - FEED)** 
 > ```bash
 >    ## Construire
 >    FROM node:13
@@ -98,7 +96,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >    # Run server when container is up
 >    CMD [ "npm", "run", "prod" ]
 
-> # ** 🔵 [!FILE4] # **DOCKERFILE-FRONTEND** 
+> ### ** 🔵 [!FILE4] # **DOCKERFILE-FRONTEND** 
 > ```bash
 >    ## Build
 >    FROM beevelop/ionic:latest AS ionic
@@ -125,12 +123,12 @@ I decided to share all the configuration files that will allow the validate a pr
 >    # COPY www /usr/share/nginx/html
 >    COPY --from=ionic /usr/src/app/www /usr/share/nginx/html
 
-> # ** 🔵 [!FILE5] # **DOCKERFILE-REVERSEPROXY** 
+> ### ** 🔵 [!FILE5] # **DOCKERFILE-REVERSEPROXY** 
 > ```bash
 >    FROM nginx:alpine
 >    COPY nginx.conf /etc/nginx/nginx.conf
 
-> # ** 🔵 [!FILE6] # **NGINX-CONFIGURATION** 
+> ### ** 🔵 [!FILE6] # **NGINX-CONFIGURATION** 
 >    ```bash
 >    worker_processes 1 ;
 >    events {
@@ -161,7 +159,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >        }
 >    }
 
-> # ** 🔵 [!FILE7] # **ENV-CONFIGMAP** 
+> ### ** 🔵 [!FILE7] # **ENV-CONFIGMAP** 
 >    ```yaml
 >    apiVersion: v1
 >    kind: ConfigMap
@@ -173,7 +171,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >      AWS_BUCKET: your-bucket-name
 >      URL: http://localhost:8100
 
-> # ** 🔵 [!FILE8] # **ENV-SECRET** 
+> ### ** 🔵 [!FILE8] # **ENV-SECRET** 
 >    ```yaml
 >    apiVersion: v1
 >    kind: Secret
@@ -187,7 +185,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >      POSTGRES_DB: your-database-name
 >      JWT_SECRET: your-jwt-secret
 
-> # ** 🔵 [!FILE9*] # **AWS-SECRET** 
+> ### ** 🔵 [!FILE9*] # **AWS-SECRET** 
 >    ```yaml
 >   apiVersion: v1
 >   kind: Secret
@@ -199,7 +197,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >     AWS_SECRET_ACCESS_KEY: YOUR-AWS_SECRET_ACCESS_KEY #base64
 >     AWS_SESSION_TOKEN: YOUR-AWS_SESSION_TOKEN #base64
 
-> # ** 🔵 [!FILE10*] # **DEPLOYMENT (USERS - FEED - FRONTEND)** 
+> ### ** 🔵 [!FILE10*] # **DEPLOYMENT (USERS - FEED - FRONTEND)** 
 >    ```yaml
 >    apiVersion: apps/v1
 >    kind: Deployment
@@ -238,7 +236,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >                  memory: your-value
 
 
-> # ** 🔵 [!FILE11*] # **SERVICE (USERS - FEED - FRONTEND)** 
+> ### ** 🔵 [!FILE11*] # **SERVICE (USERS - FEED - FRONTEND)** 
 >   ```yaml
 >   apiVersion: v1
 >   kind: Service
@@ -260,7 +258,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >   status:
 >     loadBalancer: {}
 
-> # ** 🔵 [!FILE12*] # **DEPLOYMENT REVERSEPROXY**
+> ### ** 🔵 [!FILE12*] # **DEPLOYMENT REVERSEPROXY**
 >    ```yaml 
 >    apiVersion: apps/v1
 >    kind: Deployment
@@ -294,7 +292,7 @@ I decided to share all the configuration files that will allow the validate a pr
 >          restartPolicy: Always
 
 
-> # ** 🔵 [!FILE13*] # **SERVICE REVERSEPROXY** 
+> ### ** 🔵 [!FILE13*] # **SERVICE REVERSEPROXY** 
 >    ```yaml
 >    apiVersion: v1
 >    kind: Service
@@ -309,8 +307,38 @@ I decided to share all the configuration files that will allow the validate a pr
 >        app: your-deployment-app-name
 
 
-> # ** 🔵 [!FILE14*] # **TRAVIS CI** 
-
+> ### ** 🔵 [!FILE14*] # **TRAVIS CI** 
+>    ```yaml
+>    language: node_js
+>    node_js:
+>      - 13
+>
+>    services:
+>      - docker
+>
+>    # Pre-testing installs
+>    install:
+>      - echo "nothing needs to be installed"
+>
+>    # Scripts to be run such as tests
+>    before_script:
+>      - echo "no tests"
+>
+>    script:
+>      - docker --version # print the version for logging
+>      - docker-compose -f docker-compose-build.yaml build --parallel
+>      - docker images # print all images building
+>      - docker tag your-docker-reverseproxy-image-name your-dockerhub-username/your-reverseproxy-image-nam:v1
+>      - docker tag your-docker-udagram-user-image-name your-dockerhub-username/your-docker-udagram-user-image-name:v1
+>      - docker tag your-docker-udagram-feed-image-name your-dockerhub-username/your-docker-udagram-feed-image-name :v1
+>      - docker tag  your-docker-frontend-image-name your-dockerhub-username/your-docker-frontend-image-name:v1
+>
+>    after_success:
+>      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+>      - docker push your-dockerhub-username/your-reverseproxy-image-nam:v1
+>      - docker push your-dockerhub-username/your-docker-udagram-user-image-name:v1
+>      - docker push your-dockerhub-username/your-docker-udagram-feed-image-name :v1
+>      - docker push your-dockerhub-username/your-docker-frontend-image-name:v1
 
 
 >  🔵 [!SUCCESS] # **I HOPE WELL THESE FILES CAN HELP YOU🚀** 
