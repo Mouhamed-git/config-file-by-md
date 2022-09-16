@@ -2,7 +2,6 @@
 
 As I certainly did, you must have encountered problems with some configuration files on Kubernetes in project 3 (Refactor Monolith to Microservices and Deploy)😂 .
 
-I decided to share all configuration files that will allow to validate a project.🤔
 ## LET'S GO 🚀
 
 > ### ** 🔵 [!FILE1] # **ENV-CONFIGMAP** 
