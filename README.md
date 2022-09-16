@@ -1,165 +1,12 @@
 ## INTRODUCTION 
 
-As I certainly did, you must have encountered problems with some configuration files in project 3 (Refactor Monolith to Microservices and Deploy)😂 .
+As I certainly did, you must have encountered problems with some configuration files on Kubernetes in project 3 (Refactor Monolith to Microservices and Deploy)😂 .
 
 I decided to share all configuration files that will allow the validate a project.🤔
 
 ## LET'S GO 🚀
-> ### ** 🔵 [!FILE1]DOCKER-COMPOSE-BUILD** 
-> ```yaml
->  version: "3"
->  services:
->   reverseproxy:
->    build:
->      context: ./directory-reverse-proxy/ # ./udagram-reverseproxy/ for exemple
->      dockerfile: DockerFile
->    image: your-docker-image-reverseproxy #reverseproxy for exemple
->  backend_user:
->    build:
->      context: ./directory-udagram-api-user/
->      dockerfile: DockerFile
->    image: your-docker-image-udagram-api-user
->  backend_feed:
->    build:
->      context: ./directory-udagram-api-feed/
->      dockerfile: DockerFile
->    image: your-docker-image-udagram-api-feed
->  frontend:
->    build:
->      context: ./udagram-frontend/
->      dockerfile: DockerFile
->    image: your-docker-image-udagram-frontend
- 
-> ### ** 🔵 [!FILE2] # **DOCKER-COMPOSE** 
-> ```yaml
->  version: "3"
->  services:
->    reverseproxy:
->      image: your-docker-image-reverse #reverseproxy for exemple
->      ports:
->        - 8080:8080
->      restart: always
->      depends_on:
->        - backend-user
->        - backend-feed
->    backend-user:
->      image: your-docker-image-udagram-api-user
->      environment:
->        POSTGRES_USERNAME: $POSTGRES_USERNAME
->        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
->        POSTGRES_DB: $POSTGRES_DB
->        POSTGRES_HOST: $POSTGRES_HOST
->        AWS_REGION: $AWS_REGION
->        AWS_PROFILE: $AWS_PROFILE
->        AWS_BUCKET: $AWS_BUCKET
->        JWT_SECRET: $JWT_SECRET
->        URL: $URL
->    backend-feed:
->      image: your-docker-image-udagram-api-feed
->      volumes:
->        - $HOME/.aws:/root/.aws
->      environment:
->        POSTGRES_USERNAME: $POSTGRES_USERNAME
->        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
->        POSTGRES_DB: $POSTGRES_DB
->        POSTGRES_HOST: $POSTGRES_HOST
->        AWS_REGION: $AWS_REGION
->        AWS_PROFILE: $AWS_PROFILE
->        AWS_BUCKET: $AWS_BUCKET
->        JWT_SECRET: $JWT_SECRET
->        URL: $URL
->    frontend:
->      image: your-docker-image-udagram-frontend:local
->      ports:
->        - "8100:80"
 
-> ### ** 🔵 [!FILE3] # **DOCKERFILE-BACKEND (USERS - FEED)** 
-> ```bash
->    ## Build
->    FROM node:13
->
->    # Create workdir app
->    WORKDIR /usr/src/app
->
->    # Copy package.json and package-lock.json on current container directory
->    COPY package*.json ./
->
->    # Install dependencies
->    RUN npm ci
->
->    # Copy all others files needed
->    COPY . .
->
->    # Exposed port 8080
->    EXPOSE 8080
->
->    # Run server when container is up
->    CMD [ "npm", "run", "prod" ]
-
-> ### ** 🔵 [!FILE4] # **DOCKERFILE-FRONTEND** 
-> ```bash
->    ## Build
->    FROM beevelop/ionic:latest AS ionic
->
->    ## Crreate workdir app
->    WORKDIR /usr/src/app
->
->    # Copy package.json package-lock.json on current container directory
->    COPY package*.json ./
->
->    #Install dependencies
->    RUN npm ci 
->
->    # Copy all others files needed
->    COPY . .
->
->    # Build app
->    RUN ionic build
->
->
->    # Build nginx image
->    FROM nginx:alpine
->
->    # COPY www /usr/share/nginx/html
->    COPY --from=ionic /usr/src/app/www /usr/share/nginx/html
-
-> ### ** 🔵 [!FILE5] # **DOCKERFILE-REVERSEPROXY** 
-> ```bash
->    FROM nginx:alpine
->    COPY nginx.conf /etc/nginx/nginx.conf
-
-> ### ** 🔵 [!FILE6] # **NGINX-CONFIGURATION** 
->    ```bash
->    worker_processes 1 ;
->    events {
->        worker_connections 1024 ; 
->    }
->    error_log /dev/stdout debug ;
->    http {
->        sendfile on ;
->        upstream user {
->            server your-user-service-name:8080 ; #user-svc:8080 for exemple
->        }
->        upstream feed {
->            server your-feed-service-name:8080 ; #feed-svc:8080 for exemple
->        }
->        proxy_set_header Host $host ;
->        proxy_set_header X-Real-IP $remote_addr ;
->        proxy_set_header X-NginX-Proxy true ;
->        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for ;
->        proxy_set_header X-Forwarded-Host $server_name ;
->        server {
->            listen 8080 ;
->            location /api/v0/feed {
->                proxy_pass http://feed ;
->            }
->            location /api/v0/users {
->                proxy_pass http://user ;
->            }
->        }
->    }
-
-> ### ** 🔵 [!FILE7] # **ENV-CONFIGMAP** 
+> ### ** 🔵 [!FILE1] # **ENV-CONFIGMAP** 
 >    ```yaml
 >    apiVersion: v1
 >    kind: ConfigMap
@@ -171,7 +18,7 @@ I decided to share all configuration files that will allow the validate a projec
 >      AWS_BUCKET: your-bucket-name
 >      URL: http://localhost:8100
 
-> ### ** 🔵 [!FILE8] # **ENV-SECRET** 
+> ### ** 🔵 [!FILE2] # **ENV-SECRET** 
 >    ```yaml
 >    apiVersion: v1
 >    kind: Secret
@@ -185,7 +32,7 @@ I decided to share all configuration files that will allow the validate a projec
 >      POSTGRES_DB: your-database-name
 >      JWT_SECRET: your-jwt-secret
 
-> ### ** 🔵 [!FILE9*] # **AWS-SECRET** 
+> ### ** 🔵 [!FILE3*] # **AWS-SECRET** 
 >    ```yaml
 >   apiVersion: v1
 >   kind: Secret
@@ -197,7 +44,7 @@ I decided to share all configuration files that will allow the validate a projec
 >     AWS_SECRET_ACCESS_KEY: YOUR-AWS_SECRET_ACCESS_KEY #base64
 >     AWS_SESSION_TOKEN: YOUR-AWS_SESSION_TOKEN #base64
 
-> ### ** 🔵 [!FILE10*] # **DEPLOYMENT (USERS - FEED - FRONTEND)** 
+> ### ** 🔵 [!FILE4*] # **DEPLOYMENT (USERS - FEED - FRONTEND)** 
 >    ```yaml
 >    apiVersion: apps/v1
 >    kind: Deployment
@@ -236,7 +83,7 @@ I decided to share all configuration files that will allow the validate a projec
 >                  memory: your-value
 
 
-> ### ** 🔵 [!FILE11*] # **SERVICE (USERS - FEED - FRONTEND)** 
+> ### ** 🔵 [!FILE5*] # **SERVICE (USERS - FEED - FRONTEND)** 
 >   ```yaml
 >   apiVersion: v1
 >   kind: Service
@@ -258,7 +105,7 @@ I decided to share all configuration files that will allow the validate a projec
 >   status:
 >     loadBalancer: {}
 
-> ### ** 🔵 [!FILE12*] # **DEPLOYMENT REVERSEPROXY**
+> ### ** 🔵 [!FILE6*] # **DEPLOYMENT REVERSEPROXY**
 >    ```yaml 
 >    apiVersion: apps/v1
 >    kind: Deployment
@@ -292,7 +139,7 @@ I decided to share all configuration files that will allow the validate a projec
 >          restartPolicy: Always
 
 
-> ### ** 🔵 [!FILE13*] # **SERVICE REVERSEPROXY** 
+> ### ** 🔵 [!FILE7*] # **SERVICE REVERSEPROXY** 
 >    ```yaml
 >    apiVersion: v1
 >    kind: Service
@@ -306,40 +153,36 @@ I decided to share all configuration files that will allow the validate a projec
 >      selector:
 >        app: your-deployment-app-name
 
-
-> ### ** 🔵 [!FILE14*] # **TRAVIS CI** 
->    ```yaml
->    language: node_js
->    node_js:
->      - 13
->
->    services:
->      - docker
->
->    # Pre-testing installs
->    install:
->      - echo "nothing needs to be installed"
->
->    # Scripts to be run such as tests
->    before_script:
->      - echo "no tests"
->
->    script:
->      - docker --version # print the version for logging
->      - docker-compose -f docker-compose-build.yaml build --parallel
->      - docker images # print all images building
->      - docker tag your-docker-reverseproxy-image-name your-dockerhub-username/your-reverseproxy-image-nam:v1
->      - docker tag your-docker-udagram-user-image-name your-dockerhub-username/your-docker-udagram-user-image-name:v1
->      - docker tag your-docker-udagram-feed-image-name your-dockerhub-username/your-docker-udagram-feed-image-name :v1
->      - docker tag  your-docker-frontend-image-name your-dockerhub-username/your-docker-frontend-image-name:v1
->
->    after_success:
->      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
->      - docker push your-dockerhub-username/your-reverseproxy-image-nam:v1
->      - docker push your-dockerhub-username/your-docker-udagram-user-image-name:v1
->      - docker push your-dockerhub-username/your-docker-udagram-feed-image-name :v1
->      - docker push your-dockerhub-username/your-docker-frontend-image-name:v1
-
+> ### ** 🔵 [!FILE8] # **NGINX-CONFIGURATION** 
+>    ```bash
+>    worker_processes 1 ;
+>    events {
+>        worker_connections 1024 ; 
+>    }
+>    error_log /dev/stdout debug ;
+>    http {
+>        sendfile on ;
+>        upstream user {
+>            server your-user-service-name:8080 ; #user-svc:8080 for exemple
+>        }
+>        upstream feed {
+>            server your-feed-service-name:8080 ; #feed-svc:8080 for exemple
+>        }
+>        proxy_set_header Host $host ;
+>        proxy_set_header X-Real-IP $remote_addr ;
+>        proxy_set_header X-NginX-Proxy true ;
+>        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for ;
+>        proxy_set_header X-Forwarded-Host $server_name ;
+>        server {
+>            listen 8080 ;
+>            location /api/v0/feed {
+>                proxy_pass http://feed ;
+>            }
+>            location /api/v0/users {
+>                proxy_pass http://user ;
+>            }
+>        }
+>    }
 
 >  🔵 [!SUCCESS] # **I HOPE WELL THESE FILES CAN HELP YOU🚀** 
 ___
