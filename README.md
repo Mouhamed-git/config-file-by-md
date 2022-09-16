@@ -3,7 +3,7 @@
 As I certainly did, you must have encountered problems with some configuration files on Kubernetes in project 3 (Refactor Monolith to Microservices and Deploy)😂 .
 
 I decided to share all configuration files that will allow the validate a project.🤔
-
+Cancel changes
 ## LET'S GO 🚀
 
 > ### ** 🔵 [!FILE1] # **ENV-CONFIGMAP** 
@@ -76,11 +76,11 @@ I decided to share all configuration files that will allow the validate a projec
 >                - containerPort: 8080
 >              resources:
 >                limits:
->                  cpu: your-value
->                  memory: your-value
+>                  cpu: "your-value" #2000m for example
+>                  memory: "your-value" #2048Mi for example
 >                requests:
->                  cpu: your-value
->                  memory: your-value
+>                  cpu: "your-value" #500m for example
+>                  memory: "your-value" #1024Mi for example
 
 
 > ### ** 🔵 [!FILE5*] # **SERVICE (USERS - FEED - FRONTEND)** 
@@ -129,11 +129,11 @@ I decided to share all configuration files that will allow the validate a projec
 >              imagePullPolicy: Always
 >              resources:
 >                requests:
->                  memory: your-value
->                  cpu: your-value
+>                  memory: "your-value" #64Mi for example
+>                  cpu: "your-value" #250m for example
 >                limits:
->                  memory: your-value
->                  cpu: your-value
+>                  memory: "your-value" #1024Mi for example
+>                  cpu: "your-value" #500m for example
 >              ports:
 >                - containerPort: 8080
 >          restartPolicy: Always
