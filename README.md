@@ -3,7 +3,6 @@
 As I certainly did, you must have encountered problems with some configuration files on Kubernetes in project 3 (Refactor Monolith to Microservices and Deploy)😂 .
 
 I decided to share all configuration files that will allow to validate a project.🤔
-Cancel changes
 ## LET'S GO 🚀
 
 > ### ** 🔵 [!FILE1] # **ENV-CONFIGMAP** 
@@ -64,7 +63,7 @@ Cancel changes
 >        spec:
 >          containers:
 >            - name: your-name
->              image: your-dockerhub-username/your-docker-image-name:v1
+>              image: your-dockerhub-username/your-docker-image-name:tag
 >              envFrom:
 >                - secretRef:
 >                    name: your-env-secret-name
@@ -125,7 +124,7 @@ Cancel changes
 >        spec:
 >          containers:
 >            - name: your-name
->              image: your-dockerhub-username/your-docker-image-name:v1
+>              image: your-dockerhub-username/your-docker-image-name:tag
 >              imagePullPolicy: Always
 >              resources:
 >                requests:
